@@ -16,3 +16,12 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/', 'PostControlador@index');
+
+Route::get('/', 'PostControlador@store');
+
+Route::get('/{id}', 'PostControlador@destroy');
+
+Route::get('/like/{id}', 'PostControlador@like');
+
