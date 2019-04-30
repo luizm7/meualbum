@@ -4,6 +4,7 @@ import { Post } from './post';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 import {PostDialogComponent } from './post-dialog/post-dialog.component';
+import { PostService } from './post.service';
 
 @Component({
   selector: 'app-root',
@@ -12,21 +13,24 @@ import {PostDialogComponent } from './post-dialog/post-dialog.component';
 })
 export class AppComponent {
   title = 'meuapp';
-  private posts: Post[] = [
-  	new Post("Joao", "meu post", "sub Joao", "joao@gmail.com", "Minha MSG"),
-  	new Post("Maria", "meu post", "sub Maria", "Maria@gmail.com", "Minha MSG Maria"),
-  	new Post("Joaquim", "meu post", "sub Joaquim", "Maria@gmail.com", "Minha MSG Maria"),
-  ];
+
+  public posts: Post[];
 
 
-constructor(public dialog: MatDialog) {}
+constructor(
+  public dialog: MatDialog,
+  private postService: PostService ) {}
+
+ngOnInit(){
+  this.posts = this.postService.posts;
+}
 
   openDialog() {
   	const dialogRef = this.dialog.open(PostDialogComponent, {width: '400px'});
     dialogRef.afterClosed().subscribe(
       (result) =>{
          if (result){
-          console.log(result);
+          this.postService.salvar(result.post, result.arquivo);
          }
       });
   }

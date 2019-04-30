@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 use App\Post;
 
@@ -45,8 +46,11 @@ class PostControlador extends Controller
         $post->titulo = $request->titulo;
         $post->subtitulo = $request->subtitulo;
         $post->mensagem = $request->mensagem;
-        $post->path = $path;
+        $post->arquivo = $path;
         $post->like = 0;
+
+        $post->save();
+        return response($post,200);
     }
 
     /**
@@ -91,12 +95,28 @@ class PostControlador extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+
+        if (isset($post) {
+            Storage::disk('public')->delete($post->arquivo);
+            $post->delete();      
+            return 204;      
+        } else {
+            return response('Post Não localizado',404);
+        }
     }
 
 
     public function like($id)
     {
-        //
+        $post = Post::find($id);
+
+        if (isset($post) {
+            $post->like++;  
+            $post->save();      
+            return $post;      
+        } else {
+            return response('Post Não localizado',404);
+        }
     }
 }
