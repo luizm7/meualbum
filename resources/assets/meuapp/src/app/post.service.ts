@@ -30,7 +30,7 @@ export class PostService {
    		uploadData.append('arquivo',file,file.name);
 
    		this.http.post("/api/", uploadData)
-   			.subscribe((event: HttpEvent<any>) => {
+   			.subscribe((event: any) => {
    				if (event.type == HttpEventType.Response) {
    					console.log(event);
    				}

@@ -39,7 +39,7 @@ class PostControlador extends Controller
     {
         $post = new Post();
 
-        $path - $request->file(arquivo)->store('imagens','public');
+        $path = $request->file('arquivo')->store('imagens','public');
 
         $post->nome = $request->nome;
         $post->email = $request->email;
@@ -47,7 +47,7 @@ class PostControlador extends Controller
         $post->subtitulo = $request->subtitulo;
         $post->mensagem = $request->mensagem;
         $post->arquivo = $path;
-        $post->like = 0;
+        $post->likes = 0;
 
         $post->save();
         return response($post,200);
@@ -97,7 +97,7 @@ class PostControlador extends Controller
     {
         $post = Post::find($id);
 
-        if (isset($post) {
+        if (isset($post)) {
             Storage::disk('public')->delete($post->arquivo);
             $post->delete();      
             return 204;      
@@ -111,7 +111,7 @@ class PostControlador extends Controller
     {
         $post = Post::find($id);
 
-        if (isset($post) {
+        if (isset($post)) {
             $post->like++;  
             $post->save();      
             return $post;      

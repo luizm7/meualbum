@@ -19,9 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/', 'PostControlador@index');
 
-Route::get('/', 'PostControlador@store');
+Route::post('/', 'PostControlador@store');
 
-Route::get('/{id}', 'PostControlador@destroy');
+Route::delete('/{id}', 'PostControlador@destroy');
 
 Route::get('/like/{id}', 'PostControlador@like');
 
