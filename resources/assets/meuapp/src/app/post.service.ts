@@ -29,11 +29,19 @@ export class PostService {
    		uploadData.append('mensagem',post.mensagem);
    		uploadData.append('arquivo',file,file.name);
 
-   		this.http.post("/api/", uploadData)
+   		this.http.post("/api/", uploadData, {reportProgress:true, observe: 'events' })
    			.subscribe((event: any) => {
    				if (event.type == HttpEventType.Response) {
-   					console.log(event);
+   					//console.log(event);
+            let p: any = event.body;
+            this.posts.push(
+              new Post(p.nome, p.titulo, p.subtitulo, p.email, p.mensagem, p.arquivo, p.id, p.likes)
+            );
    				}
+          if (event.type == HttpEventType.UploadProgress) {
+            console.log('UploadProgress');
+            console.log(event);
+          }
    			});
    }
 }
