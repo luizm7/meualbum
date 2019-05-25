@@ -41,7 +41,7 @@ module.exports = ".float-button {\r\n\tposition: fixed;\r\n\tbottom:40px;\r\n\tr
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar color=\"primary\">\r\n  <span>\r\n    Projeto Laravel + Angular\r\n  </span>\r\n</mat-toolbar>\r\n\r\n<mat-divider> </mat-divider>\r\n\r\n<div fxLayout=\"row wrap\" fxLayoutAlign=\"space-between none\" >\r\n<app-post *ngFor=\"let p of posts\" [post] = \"p\"></app-post>\r\n</div>\r\n\r\n<button mat-fab color=\"primary\" class=\"float-button\" (click)=\"openDialog()\">\r\n<mat-icon>add</mat-icon>  \r\n</button>\r\n"
+module.exports = "<mat-toolbar color=\"primary\">\n  <span>\n    Projeto Laravel + Angular\n  </span>\n</mat-toolbar>\n\n<mat-divider> </mat-divider>\n\n<div fxLayout=\"row wrap\" fxLayoutAlign=\"space-between none\" >\n<app-post *ngFor=\"let p of posts\" [post] = \"p\"></app-post>\n</div>\n\n<button mat-fab color=\"primary\" class=\"float-button\" (click)=\"openDialog()\">\n<mat-icon>add</mat-icon>  \n</button>\n"
 
 /***/ }),
 
@@ -322,6 +322,23 @@ var PostService = /** @class */ (function () {
             }
         });
     };
+    PostService.prototype.like = function (id) {
+        var _this = this;
+        this.http.get("/api/like/" + id)
+            .subscribe(function (event) {
+            var p = _this.posts.find(function (p) { return p.id == id; });
+            p.likes = event.likes;
+        });
+    };
+    PostService.prototype.apagar = function (id) {
+        var _this = this;
+        this.http.delete("/api/" + id)
+            .subscribe(function (event) {
+            var i = _this.posts.findIndex(function (p) { return p.id == id; });
+            if (i >= 0)
+                _this.posts.splice(i, 1);
+        });
+    };
     PostService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
@@ -379,7 +396,7 @@ module.exports = ".card {\r\n\tmax-width: 300px;\r\n\tmargin: 10px;\r\n}\r\n/*# 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card fxFlex class=\"card\">\r\n  <mat-card-header>\r\n    <div mat-card-avatar></div>\r\n    <mat-card-title>{{ post.titulo}}</mat-card-title>\r\n    <mat-card-subtitle>{{ post.subtitulo}}</mat-card-subtitle>\r\n  </mat-card-header>\r\n  <img mat-card-image src=\"/storage/{{post.arquivo}}\" alt=\"Photo of a Shiba Inu\">\r\n  <mat-card-content>\r\n    <p>\r\n  {{ post.messagem}}\r\n    </p>\r\n  </mat-card-content>\r\n  <mat-card-actions>\r\n    <button mat-button>LIKE</button>\r\n    <button mat-button>SHARE</button>\r\n  </mat-card-actions>\r\n</mat-card>\r\n"
+module.exports = "<mat-card fxFlex class=\"card\">\r\n  <mat-card-header>\r\n    <div mat-card-avatar></div>\r\n    <mat-card-title>{{ post.titulo}}</mat-card-title>\r\n    <mat-card-subtitle>{{ post.subtitulo}}</mat-card-subtitle>\r\n  </mat-card-header>\r\n  <img mat-card-image src=\"/storage/{{post.arquivo}}\" alt=\"Photo of a Shiba Inu\">\r\n  <mat-card-content>\r\n    <p>\r\n  {{ post.messagem}}\r\n    </p>\r\n  </mat-card-content>\r\n  <mat-card-actions>\r\n    <button mat-button color = \"primary\" (click)=\"like()\" >LIKE</button>\r\n    <button mat-button color = \"accent\" (click)=\"apagar()\">APAGAR</button>\r\n    <mat-icon color=\"warn\" *ngIf=\"post.likes>0\" [matBadge]=\"post.likes\" matBadgePosition=\"above after\" matBadgeColor=\"warn\" matBadgeOverlap=\"false\" >favorite</mat-icon>\r\n  </mat-card-actions>\r\n</mat-card>\r\n"
 
 /***/ }),
 
@@ -396,13 +413,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _post__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../post */ "./src/app/post.ts");
+/* harmony import */ var _post_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../post.service */ "./src/app/post.service.ts");
+
 
 
 
 var PostComponent = /** @class */ (function () {
-    function PostComponent() {
+    function PostComponent(PostService) {
+        this.PostService = PostService;
     }
     PostComponent.prototype.ngOnInit = function () {
+    };
+    PostComponent.prototype.like = function () {
+        this.PostService.like(this.post.id);
+    };
+    PostComponent.prototype.apagar = function () {
+        this.PostService.apagar(this.post.id);
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
@@ -414,7 +440,7 @@ var PostComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./post.component.html */ "./src/app/post/post.component.html"),
             styles: [__webpack_require__(/*! ./post.component.css */ "./src/app/post/post.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_post_service__WEBPACK_IMPORTED_MODULE_3__["PostService"]])
     ], PostComponent);
     return PostComponent;
 }());
@@ -484,7 +510,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\inetpub\wwwroot\laravel\meualbum\resources\assets\meuapp\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\meualbum\resources\assets\meuapp\src\main.ts */"./src/main.ts");
 
 
 /***/ })

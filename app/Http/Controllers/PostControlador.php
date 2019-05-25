@@ -112,7 +112,7 @@ class PostControlador extends Controller
         $post = Post::find($id);
 
         if (isset($post)) {
-            $post->like++;  
+            $post->likes++;  
             $post->save();      
             return $post;      
         } else {
