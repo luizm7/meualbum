@@ -17,5 +17,7 @@
     <script type="text/javascript" src="{{ asset('js/styles.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/vendor.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/main.js') }}"></script>
+
+     <script src="{{asset('js/app.js')}}" type="text/javascript"></script>
     </body>
 </html>
