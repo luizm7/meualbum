@@ -28,8 +28,11 @@ class LoginListener
     public function handle(Login $event)
     {
         info("logou".$event->user);
+        $tempo = now()->addMinutes(1);
 
         Mail::to($event->user)
-        ->send(New NovoAcesso($event->user));
+        #->send(New NovoAcesso($event->user));
+        #->queue(New NovoAcesso($event->user));
+        ->later($tempo,New NovoAcesso($event->user));
     }
 }
